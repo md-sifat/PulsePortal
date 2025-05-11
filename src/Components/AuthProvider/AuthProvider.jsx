@@ -11,6 +11,8 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [camps, setCamps] = useState([]);
+    const [dashboard, setDashboard] = useState(null);
+
 
     useEffect(() => {
         fetch('')
@@ -62,7 +64,9 @@ const AuthProvider = ({ children }) => {
         setLoading,
         setUser,
         camps,
-        setCamps
+        setCamps,
+        setDashboard,
+        dashboard
 
     }
 

@@ -6,6 +6,7 @@ import App from './App.jsx'
 import Home from './Components/Home/Home.jsx'
 import AuthProvider from './Components/AuthProvider/AuthProvider.jsx'
 import HomeCont from './Components/HomeCont/HomeCont.jsx'
+import Login from './Components/Login/Login.jsx'
 
 const router = createBrowserRouter(
   [
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
         },
         {
           path : '/login',
+          element : <Login></Login>
           
         }
       ]

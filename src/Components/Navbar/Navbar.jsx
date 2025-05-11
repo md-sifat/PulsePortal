@@ -9,7 +9,7 @@ import { auth } from '../../firebase/firebase.init';
 import { FaHome, FaCampground, FaUserPlus, FaUserCircle, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 
 const Navbar = () => {
-    const { user, setUser } = useContext(authContext);
+    const { user, setUser , dashboard , setDashboard } = useContext(authContext);
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -84,7 +84,7 @@ const Navbar = () => {
                                         {user.displayName || 'User'}
                                     </div>
                                     <Link
-                                        to="/dashboard"
+                                        to={dashboard}
                                         className="block px-4 py-2 text-gray-700 hover:bg-cyan-100 transition-colors duration-200"
                                         onClick={() => setIsDropdownOpen(false)}
                                     >
@@ -102,7 +102,7 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <Link
-                            to="/join-us"
+                            to="/login"
                             className="flex items-center text-white text-base lg:text-lg bg-cyan-600 px-4 py-2 rounded-full hover:bg-cyan-800 transition-colors duration-300"
                         >
                             <FaUserPlus className="mr-2" />
@@ -143,7 +143,7 @@ const Navbar = () => {
                         {user ? (
                             <>
                                 <Link
-                                    to="/dashboard"
+                                    to={dashboard}
                                     className="flex items-center text-white text-base hover:text-cyan-200 transition-colors duration-300"
                                     onClick={toggleMobileMenu}
                                 >
@@ -163,7 +163,7 @@ const Navbar = () => {
                             </>
                         ) : (
                             <Link
-                                to="/join-us"
+                                to="/login"
                                 className="flex items-center text-white text-base bg-cyan-600 px-4 py-2 rounded-full hover:bg-cyan-800 transition-colors duration-300"
                                 onClick={toggleMobileMenu}
                             >
