@@ -63,6 +63,7 @@ const Register = () => {
                 };
 
                 postUserData(user, userData);
+                setDashboard("/customer-dashboard");
                 toast.success("Google Registration successful!");
                 navigate("/login");
 
