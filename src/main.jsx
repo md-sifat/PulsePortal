@@ -15,6 +15,11 @@ import AddCamp from './Components/AdminDashboard/dashboardComponents/AddCamp.jsx
 import ProfileA from './Components/AdminDashboard/dashboardComponents/ProfileA.jsx'
 import ManageCamp from './Components/AdminDashboard/dashboardComponents/ManageCamp.jsx'
 import ManageRcamp from './Components/AdminDashboard/dashboardComponents/ManageRcamp.jsx'
+import ProfileC from './Components/CustomerDashboard/dashboardComponents/ProfileC.jsx'
+import Analytics from './Components/CustomerDashboard/dashboardComponents/Analytics.jsx'
+import RegisteredCamp from './Components/CustomerDashboard/dashboardComponents/RegisteredCamp.jsx'
+import PaymentHistory from './Components/CustomerDashboard/dashboardComponents/PaymentHistory.jsx'
+import CustomerDashboard from './Components/CustomerDashboard/CustomerDashboard.jsx'
 
 const router = createBrowserRouter(
   [
@@ -57,7 +62,30 @@ const router = createBrowserRouter(
               element: <Private> <ManageRcamp> </ManageRcamp> </Private>
             },
           ]
-        }
+        },
+        {
+          path: '/customer-dashboard',
+          element: <Private> <CustomerDashboard> </CustomerDashboard> </Private>,
+          children: [
+            {
+              path: '/customer-dashboard/profile-c',
+              element: <Private> <ProfileC> </ProfileC> </Private>
+            },
+            {
+              path: '/customer-dashboard/analytics',
+              element: <Private> <Analytics> </Analytics> </Private>
+            },
+            {
+              path: '/customer-dashboard/regcamp',
+              element: <Private> <RegisteredCamp> </RegisteredCamp> </Private>
+            },
+            {
+              path: '/customer-dashboard/histrory',
+              element: <Private> <PaymentHistory> </PaymentHistory> </Private>
+            },
+          ]
+        },
+
       ]
     }
   ]
