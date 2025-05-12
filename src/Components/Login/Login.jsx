@@ -36,12 +36,12 @@ const Login = () => {
             if (!response.ok) throw new Error("Failed to fetch user data");
 
             const userData = await response.json();
-
+            console.log(userData);
             setUser(userData);
             setRole(userData.role || "customer");
 
             // Set dashboard route based on role
-            setDashboard(userData.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
+            setDashboard(user.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
 
             navigate("/");
         } catch (err) {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { authContext } from '../AuthProvider/AuthProvider';
 import logo from '../../assets/logo.webp';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,7 +12,15 @@ const Navbar = () => {
   const { user, setUser, dashboard, setDashboard } = useContext(authContext);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    console.log(dashboard);
+
+  useEffect(() => {
+    // updateData();
+    if (user) {
+      console.log(user.email);
+      setDashboard(user.email ==="admin@gmail.com" ? '/admin-dashboard' : '/customer-dashboard');
+    }
+  }, [user, setDashboard]);
+  console.log(dashboard);
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -72,9 +80,8 @@ const Navbar = () => {
                 />
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${
-                  isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
-                }`}
+                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
+                  }`}
               >
                 <div className="px-4 py-3 border-b text-gray-800 font-semibold">
                   {user.displayName || 'User'}
@@ -122,9 +129,8 @@ const Navbar = () => {
                 />
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${
-                  isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
-                }`}
+                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
+                  }`}
               >
                 <div className="px-4 py-3 border-b text-gray-800 font-semibold">
                   {user.displayName || 'User'}

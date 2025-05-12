@@ -9,6 +9,7 @@ export const authContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [userData , setUserdata] = useState(null);
     const [loading, setLoading] = useState(false);
     const [camps, setCamps] = useState([]);
     const [dashboard, setDashboard] = useState(null);
@@ -66,7 +67,9 @@ const AuthProvider = ({ children }) => {
         camps,
         setCamps,
         setDashboard,
-        dashboard
+        dashboard,
+        userData,
+        setUserdata
 
     }
 

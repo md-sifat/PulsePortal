@@ -98,9 +98,9 @@ const Register = () => {
                 photoURL: photoURL || "",
                 role,
             };
-
+            setDashboard(userData.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
             await postUserData(user, userData);
-
+            // setDashboard("");
             toast.success("Registration successful!");
             navigate("/login");
         } catch (err) {
