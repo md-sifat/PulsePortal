@@ -9,19 +9,18 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase/firebase.init";
 
 const Register = () => {
-    const { createUser , user, setUser, loading, setLoading, dashboard, setDashboard } =
+    const { createUser, user, setUser, loading, setLoading, dashboard, setDashboard } =
         useContext(authContext);
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [photoURL, setPhotoURL] = useState("");
-    const [role, setRole] = useState("customer"); 
+    const [role, setRole] = useState("customer");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const provider = new GoogleAuthProvider();
 
-    // Function to post user data to API
     const postUserData = async (user, userData) => {
         try {
             const idToken = await getIdToken(user);
@@ -40,7 +39,6 @@ const Register = () => {
             const savedData = await response.json();
             setUser(savedData);
             setDashboard(userData.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
-
             return savedData;
         } catch (err) {
             console.error("Error posting user data:", err);
@@ -48,9 +46,8 @@ const Register = () => {
         }
     };
 
-    // Handle Google registration (auto customer role)
-
     const handleGoogleRegister = () => {
+        setLoading(true);
         signInWithPopup(auth, provider)
             .then((res) => {
                 const user = res.user;
@@ -66,15 +63,15 @@ const Register = () => {
                 setDashboard("/customer-dashboard");
                 toast.success("Google Registration successful!");
                 navigate("/login");
-
-
             })
             .catch((error) => {
                 toast.error("Registration failed!");
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
 
-    // Handle email/password registration
     const handleRegister = async (event) => {
         event.preventDefault();
         setError("");
@@ -86,6 +83,7 @@ const Register = () => {
             return;
         }
 
+        setLoading(true);
         try {
             const result = await createUser(email, password);
             const user = result.user;
@@ -100,19 +98,20 @@ const Register = () => {
             };
             setDashboard(userData.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
             await postUserData(user, userData);
-            // setDashboard("");
             toast.success("Registration successful!");
             navigate("/login");
         } catch (err) {
             setError(err.message);
             toast.error("Registration failed!");
+        } finally {
+            setLoading(false);
         }
     };
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="flex items-center justify-center min-h-screen bg-transparent">
+                <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-blue-500"></div>
             </div>
         );
     }
@@ -122,14 +121,12 @@ const Register = () => {
             <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Create Your Account</h2>
 
-                {/* Error Message */}
                 {error && (
                     <div className="bg-red-100 text-red-700 p-3 rounded mb-4 text-center">
                         {error}
                     </div>
                 )}
 
-                {/* Registration Form */}
                 <form onSubmit={handleRegister} className="space-y-4">
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -217,7 +214,6 @@ const Register = () => {
                     </button>
                 </form>
 
-                {/* Google Registration */}
                 <div className="mt-6">
                     <button
                         onClick={handleGoogleRegister}
@@ -228,7 +224,6 @@ const Register = () => {
                     </button>
                 </div>
 
-                {/* Login Link and Button */}
                 <div className="mt-4 text-center">
                     <p className="text-gray-600">
                         Already have an account?{" "}
@@ -237,9 +232,7 @@ const Register = () => {
                         </Link>
                     </p>
                     <Link to="/login">
-                        <button
-                            className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold"
-                        >
+                        <button className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-semibold">
                             Log In
                         </button>
                     </Link>
