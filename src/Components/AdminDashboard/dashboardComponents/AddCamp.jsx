@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 
 const AddCamp = () => {
   const defaultDescription = 'Join us for an exciting camp experience!';
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -25,6 +26,7 @@ const AddCamp = () => {
   });
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       const response = await fetch('https://pulse-portal-server.vercel.app/camps', {
         method: 'POST',
@@ -34,7 +36,7 @@ const AddCamp = () => {
         body: JSON.stringify({
           ...data,
           campFees: parseFloat(data.campFees), // Ensure number
-          participantCount: 0, 
+          participantCount: 0,
         }),
       });
 
@@ -44,10 +46,12 @@ const AddCamp = () => {
 
       const result = await response.json();
       toast.success('Camp added successfully!');
-      reset(); 
+      reset();
     } catch (error) {
       console.error('Error adding camp:', error);
       toast.error('Failed to add camp. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -206,13 +210,39 @@ const AddCamp = () => {
           )}
         </div>
 
-        {/* Submit Button */}
+        {/* Submit Button with Spinner */}
         <div className="text-center">
           <button
             type="submit"
-            className="bg-cyan-600 text-white px-6 py-2 rounded-md hover:bg-cyan-700 transition-colors duration-300"
+            disabled={isLoading}
+            className={`bg-cyan-600 text-white px-6 py-2 rounded-md hover:bg-cyan-700 transition-colors duration-300 flex items-center justify-center w-32 mx-auto ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
-            Add Camp
+            {isLoading ? (
+              <svg
+                className="animate-spin h-5 w-5 text-cyan-100"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            ) : (
+              'Add Camp'
+            )}
           </button>
         </div>
       </form>
