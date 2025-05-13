@@ -43,11 +43,11 @@ const RegisteredCamp = () => {
       
       // Update payment status
       const updateResponse = await fetch(
-        `https://pulse-portal-server.vercel.app/reg_camp/${camp._id}`,
+        `https://pulse-portal-server.vercel.app/reg_camps/${camp._id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ paymentStatus: 'Paid' }),
+          body: JSON.stringify({ status: 'Paid' }),
         }
       );
       if (!updateResponse.ok) throw new Error('Failed to update payment status');
@@ -91,7 +91,7 @@ const RegisteredCamp = () => {
     setIsSubmitting(true);
     try {
       const response = await fetch(
-        `https://pulse-portal-server.vercel.app/reg_camp/${camp._id}`,
+        `https://pulse-portal-server.vercel.app/reg_camps/${camp._id}`,
         {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
