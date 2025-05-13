@@ -16,38 +16,10 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
-    const [role, setRole] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const provider = new GoogleAuthProvider();
 
-    const fetchAndUpdateUser = async (user) => {
-        try {
-            const idToken = await getIdToken(user);
-
-            const response = await fetch(`https://pulse-portal-server.vercel.app/users/${user.uid}`, {
-                headers: {
-                    Authorization: `Bearer ${idToken}`,
-                },
-            });
-
-            if (!response.ok) throw new Error("Failed to fetch user data");
-
-            const userData = await response.json();
-            console.log(userData);
-            setUser(userData);
-            setRole(userData.role || "customer");
-
-            setDashboard(user.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
-
-            navigate("/");
-        } catch (err) {
-            console.error("Error fetching user data:", err);
-            setError("Failed to fetch user data");
-            setDashboard("/customer-dashboard");
-            navigate("/");
-        }
-    };
-
+    
     const handleGoogleLogin = async () => {
         setIsSubmitting(true);
         try {
@@ -56,9 +28,7 @@ const Login = () => {
 
             toast.success("Google Registration successful!");
             setUser(user);
-            setRole("customer");
 
-            setDashboard("/customer-dashboard");
 
             toast.success("Google Login successful!");
             navigate("/");
@@ -76,8 +46,6 @@ const Login = () => {
         try {
             const result = await loginUser(email, password);
             const user = result.user;
-            await fetchAndUpdateUser(user);
-
             toast.success("Login successful!");
         } catch (err) {
             setError(err.message);

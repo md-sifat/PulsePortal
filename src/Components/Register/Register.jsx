@@ -16,7 +16,6 @@ const Register = () => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [photoURL, setPhotoURL] = useState("");
-    const [role, setRole] = useState("customer");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const provider = new GoogleAuthProvider();
@@ -38,7 +37,6 @@ const Register = () => {
 
             const savedData = await response.json();
             setUser(savedData);
-            setDashboard(userData.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
             return savedData;
         } catch (err) {
             console.error("Error posting user data:", err);
@@ -59,10 +57,9 @@ const Register = () => {
                     role: "customer",
                 };
 
-                postUserData(user, userData);
-                setDashboard("/customer-dashboard");
                 toast.success("Google Registration successful!");
-                navigate("/login");
+                navigate("/");
+                postUserData(user, userData);
             })
             .catch((error) => {
                 toast.error("Registration failed!");
@@ -75,7 +72,6 @@ const Register = () => {
     const handleRegister = async (event) => {
         event.preventDefault();
         setError("");
-
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
         if (!passwordRegex.test(password)) {
             setError("Password must be at least 6 characters with one uppercase and one lowercase letter.");
@@ -94,12 +90,11 @@ const Register = () => {
                 email,
                 name,
                 photoURL: photoURL || "",
-                role,
+                role : "customer",
             };
-            setDashboard(userData.role === "admin" ? "/admin-dashboard" : "/customer-dashboard");
-            await postUserData(user, userData);
             toast.success("Registration successful!");
-            navigate("/login");
+            navigate("/");
+            await postUserData(user, userData);
         } catch (err) {
             setError(err.message);
             toast.error("Registration failed!");
@@ -169,20 +164,7 @@ const Register = () => {
                             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                         />
                     </div>
-                    <div>
-                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                            Role
-                        </label>
-                        <select
-                            id="role"
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                        >
-                            <option value="customer">Customer</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
+                    
                     <div>
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                             Password
