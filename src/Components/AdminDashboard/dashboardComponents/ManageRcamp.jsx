@@ -16,7 +16,7 @@ const ManageRcamp = () => {
         // Ensure paymentStatus and confirmationStatus have defaults
         const formattedData = data.map((reg) => ({
           ...reg,
-          paymentStatus: reg.paymentStatus || 'Unpaid',
+          paymentStatus: reg.status || 'Unpaid',
           confirmationStatus: reg.confirmationStatus || 'Pending',
         }));
         setRegistrations(formattedData);
@@ -133,7 +133,7 @@ const ManageRcamp = () => {
             <tbody>
               {registrations.map((reg) => {
                 const isCancelDisabled =
-                  reg.paymentStatus === 'Paid' && reg.confirmationStatus === 'Confirmed';
+                  reg.status === 'Paid' && reg.confirmationStatus === 'Confirmed';
                 return (
                   <tr key={reg._id} className="border-b border-gray-200">
                     <td className="p-3 text-gray-800">{reg.campName || 'N/A'}</td>
@@ -153,7 +153,7 @@ const ManageRcamp = () => {
                     <td className="p-3 text-gray-800">
                       {reg.confirmationStatus === 'Pending' ? (
                         <button
-                          onClick={() => handleConfirm(reg._id, reg.paymentStatus)}
+                          onClick={() => handleConfirm(reg._id, reg.status)}
                           className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700 text-xs"
                         >
                           Pending

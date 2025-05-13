@@ -83,7 +83,7 @@ const RegisteredCamp = () => {
   };
 
   const handleCancel = async (camp) => {
-    if (camp.paymentStatus === 'Paid') return;
+    if (camp.status === 'Paid') return;
 
     setIsSubmitting(true);
     try {
@@ -217,25 +217,25 @@ const RegisteredCamp = () => {
                     <button
                       onClick={() => setShowPayConfirm(camp._id)}
                       className={`px-3 py-1 rounded-md text-white ${
-                        camp.paymentStatus === 'Paid'
+                        camp.status === 'Paid'
                           ? 'bg-gray-400 cursor-not-allowed'
                           : 'bg-cyan-600 hover:bg-cyan-700'
                       }`}
-                      disabled={isSubmitting || camp.paymentStatus === 'Paid'}
+                      disabled={isSubmitting || camp.status === 'Paid'}
                     >
-                      {camp.paymentStatus === 'Paid' ? 'Paid' : 'Pay'}
+                      {camp.status === 'Paid' ? 'Paid' : 'Pay'}
                     </button>
                   </td>
                   <td className="py-3 px-4">
-                    {camp.status === 'Confirmed' ? (
+                    {camp.confirmationStatus === 'Confirmed' ? (
                       <span className="text-green-600">Confirmed</span>
                     ) : (
                       <span className="text-yellow-600">Pending</span>
                     )}
                   </td>
                   <td className="py-3 px-4">
-                    {camp.paymentStatus === 'Paid' &&
-                    camp.status === 'Confirmed' ? (
+                    {camp.status === 'Paid' &&
+                    camp.confirmationStatus === 'Confirmed' ? (
                       <button
                         onClick={() => setShowFeedbackForm(camp._id)}
                         className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700"
