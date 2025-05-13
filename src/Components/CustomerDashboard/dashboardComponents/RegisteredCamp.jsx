@@ -214,17 +214,17 @@ const RegisteredCamp = () => {
                   <td className="py-3 px-4">${camp.campFees?.toFixed(2)}</td>
                   <td className="py-3 px-4">{user.displayName || user.email}</td>
                   <td className="py-3 px-4">
-                    {camp.paymentStatus === 'Paid' ? (
-                      <span className="text-green-600">Paid</span>
-                    ) : (
-                      <button
-                        onClick={() => setShowPayConfirm(camp._id)}
-                        className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                        disabled={isSubmitting || camp.paymentStatus === 'Paid'}
-                      >
-                        Pay
-                      </button>
-                    )}
+                    <button
+                      onClick={() => setShowPayConfirm(camp._id)}
+                      className={`px-3 py-1 rounded-md text-white ${
+                        camp.paymentStatus === 'Paid'
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-cyan-600 hover:bg-cyan-700'
+                      }`}
+                      disabled={isSubmitting || camp.paymentStatus === 'Paid'}
+                    >
+                      {camp.paymentStatus === 'Paid' ? 'Paid' : 'Pay'}
+                    </button>
                   </td>
                   <td className="py-3 px-4">
                     {camp.status === 'Confirmed' ? (
