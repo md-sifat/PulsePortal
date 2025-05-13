@@ -8,23 +8,24 @@ import { authContext } from '../AuthProvider/AuthProvider';
 import { FaHospital, FaUsers, FaHandsHelping, FaHeartbeat } from 'react-icons/fa';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import logo from '../../assets/logo.webp'
 
 // Success stories for the slider
 const successStories = [
     {
         title: 'Community Health Triumph',
         description: 'Over 500 residents received free screenings at our 2024 camp.',
-        image: 'https://i.ibb.co/ZpWDHrTM/istockphoto-486596345-612x612.jpg',
+        image: 'https://i.ibb.co/wZbnbrrj/istockphoto-1173584141-612x612.jpg',
     },
     {
         title: 'Empowering Rural Care',
         description: 'Trained 50+ local volunteers to support ongoing health initiatives.',
-        image: 'https://images.unsplash.com/photo-1580281658626-ee379f3cce93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+        image: 'https://i.ibb.co/4gsbBBCf/istockphoto-1395923150-612x612.jpg',
     },
     {
         title: 'Life-Saving Interventions',
         description: 'Identified critical cases, saving lives through timely referrals.',
-        image: 'https://images.unsplash.com/photo-1576765607924-3a7bd1c73d84?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80',
+        image: 'https://i.ibb.co/0p5zmF7T/istockphoto-1216092090-612x612.jpg',
     },
 ];
 
@@ -517,7 +518,7 @@ const HomeCont = () => {
                                 </p>
                                 <div className="text-center">
                                     <Link
-                                        to={`/camp-details/${camp._id}`}
+                                        to={`/available-camps/${camp._id}`}
                                         className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-4 py-2 rounded-md hover:from-cyan-600 hover:to-blue-600 transition-all duration-300"
                                     >
                                         Details
@@ -602,7 +603,7 @@ const HomeCont = () => {
                     className="max-w-7xl mx-auto text-center"
                 >
                     <img
-                        src="https://via.placeholder.com/150?text=Medical+Logo"
+                        src={logo}
                         alt="Medical Logo"
                         className="w-24 h-24 mx-auto mb-6 rounded-full border-2 border-cyan-500"
                     />
