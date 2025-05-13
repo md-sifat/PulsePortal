@@ -23,7 +23,6 @@ const RegisteredCamp = () => {
         });
         if (!response.ok) throw new Error('Failed to fetch registered camps');
         const data = await response.json();
-        // Filter camps for the current user
         const userCamps = data.filter((camp) => camp.userEmail === user.email);
         setRegisteredCamps(userCamps);
         setLoading(false);
@@ -41,7 +40,6 @@ const RegisteredCamp = () => {
     try {
       const transactionId = `TXN_${Math.random().toString(36).substr(2, 9)}`;
       
-      // Update payment status
       const updateResponse = await fetch(
         `https://pulse-portal-server.vercel.app/reg_camps/${camp._id}`,
         {
@@ -52,7 +50,6 @@ const RegisteredCamp = () => {
       );
       if (!updateResponse.ok) throw new Error('Failed to update payment status');
 
-      // Store transaction details
       const transactionResponse = await fetch(
         'https://pulse-portal-server.vercel.app/transactions',
         {
@@ -160,7 +157,7 @@ const RegisteredCamp = () => {
         className="min-h-screen flex items-center justify-center bg-gray-100"
       >
         <svg
-          className="animate-spin h-8 w-8 text-cyan-600"
+          className="animate-spin h-12 w-12 text-cyan-600"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -222,8 +219,8 @@ const RegisteredCamp = () => {
                     ) : (
                       <button
                         onClick={() => setShowPayConfirm(camp._id)}
-                        className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700"
-                        disabled={isSubmitting}
+                        className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        disabled={isSubmitting || camp.paymentStatus === 'Paid'}
                       >
                         Pay
                       </button>
@@ -272,7 +269,7 @@ const RegisteredCamp = () => {
 
       {/* Payment Confirmation Dialog */}
       {showPayConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-transparent flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">Confirm Payment</h3>
             <p className="text-gray-600 mb-6">
