@@ -3,12 +3,15 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { authContext } from '../../AuthProvider/AuthProvider';
+import { updateEmail } from 'firebase/auth';
+import { auth } from '../../../firebase/firebase.init'
 
 const ProfileC = () => {
   const { user } = useContext(authContext);
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -27,7 +30,8 @@ const ProfileC = () => {
           const data = await response.json();
           const profileData = {
             name: data.name || 'Customer User',
-            image: data.image || 'https://via.placeholder.com/150',
+            image: data.photoURL || 'https://via.placeholder.com/150',
+            email: data.email || user.email,
             phone: data.phone || '',
           };
           setProfile(profileData);
@@ -39,6 +43,7 @@ const ProfileC = () => {
           const defaultProfile = {
             name: 'Customer User',
             image: 'https://via.placeholder.com/150',
+            email: user.email,
             phone: '',
           };
           setProfile(defaultProfile);
@@ -60,16 +65,33 @@ const ProfileC = () => {
     }
   };
 
+  // Validate email format
+  const isValidEmail = (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value) || 'Please enter a valid email address';
+  };
+
   // Validate phone number format (optional)
   const isValidPhone = (value) => {
-    if (!value) return true; 
+    if (!value) return true; // Phone is optional
     const phoneRegex = /^\+?\d{10,15}$/;
     return phoneRegex.test(value) || 'Please enter a valid phone number (e.g., +1234567890)';
   };
 
   // Handle form submission
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     try {
+      // Update Firebase email if changed
+      if (data.email !== user.email) {
+        try {
+          await updateEmail(auth.currentUser, data.email);
+        } catch (firebaseError) {
+          throw new Error('Failed to update email in Firebase. You may need to re-authenticate.');
+        }
+      }
+
+      // Update profile in database
       const response = await fetch(`https://pulse-portal-server.vercel.app/users/${user.uid}`, {
         method: 'PUT',
         headers: {
@@ -77,7 +99,8 @@ const ProfileC = () => {
         },
         body: JSON.stringify({
           name: data.name,
-          image: data.image,
+          image: data.photoURL,
+          email: data.email,
           phone: data.phone,
         }),
       });
@@ -89,7 +112,8 @@ const ProfileC = () => {
 
       setProfile({
         name: data.name,
-        image: data.image,
+        image: data.photoURL,
+        email: data.email,
         phone: data.phone,
       });
       setIsEditing(false);
@@ -97,6 +121,8 @@ const ProfileC = () => {
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error(`Failed to update profile: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -110,7 +136,8 @@ const ProfileC = () => {
     setIsEditing(false);
     reset({
       name: profile.name,
-      image: profile.image,
+      image: profile.photoURL,
+      email: profile.email,
       phone: profile.phone,
     });
   };
@@ -168,7 +195,7 @@ const ProfileC = () => {
           <div className="text-center space-y-2">
             <h3 className="text-lg font-semibold text-gray-800">{profile.name}</h3>
             <p className="text-gray-600">
-              <span className="font-medium">Email:</span> {user.email}
+              <span className="font-medium">Email:</span> {profile.email}
             </p>
             <p className="text-gray-600">
               <span className="font-medium">Phone:</span> {profile.phone || 'Not provided'}
@@ -228,18 +255,21 @@ const ProfileC = () => {
           {/* Contact Details Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-800">Contact Details</h3>
-            {/* Email (Read-only) */}
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-cyan-600 mb-1">Email</label>
               <input
                 type="email"
-                value={user.email}
-                disabled
-                className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600"
+                {...register('email', {
+                  required: 'Email is required',
+                  validate: isValidEmail,
+                })}
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                placeholder="Enter your email"
               />
-              <p className="mt-1 text-sm text-gray-500">
-                Email is tied to your account and cannot be updated here.
-              </p>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+              )}
             </div>
 
             {/* Phone */}
@@ -265,9 +295,35 @@ const ProfileC = () => {
           <div className="flex justify-center space-x-4">
             <button
               type="submit"
-              className="bg-cyan-600 text-white px-6 py-2 rounded-md hover:bg-cyan-700 transition-colors duration-300"
+              disabled={isSubmitting}
+              className={`bg-cyan-600 text-white px-6 py-2 rounded-md hover:bg-cyan-700 flex items-center justify-center ${
+                isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+              }`}
             >
-              Save
+              {isSubmitting ? (
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              ) : (
+                'Save'
+              )}
             </button>
             <button
               type="button"
