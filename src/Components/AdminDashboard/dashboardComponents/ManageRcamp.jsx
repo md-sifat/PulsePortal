@@ -6,27 +6,29 @@ const ManageRcamp = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch all registered camps
+  // Function to fetch all registered camps
+  const fetchRegistrations = async () => {
+    try {
+      const response = await fetch('https://pulse-portal-server.vercel.app/reg_camps');
+      if (!response.ok) throw new Error('Failed to fetch registered camps');
+      const data = await response.json();
+      // Ensure paymentStatus and confirmationStatus have defaults
+      const formattedData = data.map((reg) => ({
+        ...reg,
+        paymentStatus: reg.status || 'Unpaid',
+        confirmationStatus: reg.confirmationStatus || 'Pending',
+      }));
+      setRegistrations(formattedData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching registrations:', error);
+      toast.error('Failed to load registered camps.');
+      setLoading(false);
+    }
+  };
+
+  // Fetch registrations on component mount
   useEffect(() => {
-    const fetchRegistrations = async () => {
-      try {
-        const response = await fetch('https://pulse-portal-server.vercel.app/reg_camps');
-        if (!response.ok) throw new Error('Failed to fetch registered camps');
-        const data = await response.json();
-        // Ensure paymentStatus and confirmationStatus have defaults
-        const formattedData = data.map((reg) => ({
-          ...reg,
-          paymentStatus: reg.status || 'Unpaid',
-          confirmationStatus: reg.confirmationStatus || 'Pending',
-        }));
-        setRegistrations(formattedData);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching registrations:', error);
-        toast.error('Failed to load registered camps.');
-        setLoading(false);
-      }
-    };
     fetchRegistrations();
   }, []);
 
@@ -45,11 +47,7 @@ const ManageRcamp = () => {
       });
 
       if (!response.ok) throw new Error('Failed to confirm registration');
-      setRegistrations((prev) =>
-        prev.map((reg) =>
-          reg._id === registrationId ? { ...reg, confirmationStatus: 'Confirmed' } : reg
-        )
-      );
+      await fetchRegistrations(); // Re-fetch data after confirmation
       toast.success('Registration confirmed successfully!');
     } catch (error) {
       console.error('Error confirming registration:', error);
@@ -67,7 +65,7 @@ const ManageRcamp = () => {
       });
 
       if (!response.ok) throw new Error('Failed to cancel registration');
-      setRegistrations((prev) => prev.filter((reg) => reg._id !== registrationId));
+      await fetchRegistrations(); // Re-fetch data after cancellation
       toast.success('Registration cancelled successfully!');
     } catch (error) {
       console.error('Error cancelling registration:', error);
@@ -156,10 +154,10 @@ const ManageRcamp = () => {
                           onClick={() => handleConfirm(reg._id, reg.status)}
                           className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700 text-xs"
                         >
-                          Pending
+                          Confirm
                         </button>
                       ) : (
-                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                        <span className="bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-xs font-medium">
                           Confirmed
                         </span>
                       )}
