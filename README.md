@@ -3,7 +3,6 @@
 A modern full-stack web application for managing **healthcare camps**. Users can **browse**, **register**, **pay**, **cancel**, and **submit feedback** for health camps with a sleek UI and smooth user experience.
 
 > ✅ **Live Site**: [https://pulse-portal-nine.vercel.app](https://pulse-portal-nine.vercel.app)  
-> 🔗 **Server API**: [https://pulse-portal-server.vercel.app](https://pulse-portal-server.vercel.app)
 
 ---
 
