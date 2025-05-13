@@ -20,6 +20,7 @@ import Analytics from './Components/CustomerDashboard/dashboardComponents/Analyt
 import RegisteredCamp from './Components/CustomerDashboard/dashboardComponents/RegisteredCamp.jsx'
 import PaymentHistory from './Components/CustomerDashboard/dashboardComponents/PaymentHistory.jsx'
 import CustomerDashboard from './Components/CustomerDashboard/CustomerDashboard.jsx'
+import AvailableCamps from './Components/AvailableCamps/AvailableCamps.jsx'
 
 const router = createBrowserRouter(
   [
@@ -40,6 +41,14 @@ const router = createBrowserRouter(
           path: '/register',
           element: <Register></Register>
 
+        },
+        {
+          path : '/available-camps',
+          element : <Private> <AvailableCamps> </AvailableCamps> </Private>
+        },
+        {
+          path : '/available-camps/:campId',
+          element : <Private> <AvailableCamps> </AvailableCamps> </Private>
         },
         {
           path: '/admin-dashboard',
