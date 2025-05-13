@@ -13,25 +13,25 @@ const RegisteredCamp = () => {
   const [showPayConfirm, setShowPayConfirm] = useState(null);
   const { register, handleSubmit, reset } = useForm();
 
+  const fetchRegisteredCamps = async () => {
+    try {
+      const response = await fetch('https://pulse-portal-server.vercel.app/reg_camps', {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('Failed to fetch registered camps');
+      const data = await response.json();
+      const userCamps = data.filter((camp) => camp.userEmail === user.email);
+      setRegisteredCamps(userCamps);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching registered camps:', error);
+      toast.error('Failed to load registered camps.');
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
-
-    const fetchRegisteredCamps = async () => {
-      try {
-        const response = await fetch('https://pulse-portal-server.vercel.app/reg_camps', {
-          headers: { 'Content-Type': 'application/json' },
-        });
-        if (!response.ok) throw new Error('Failed to fetch registered camps');
-        const data = await response.json();
-        const userCamps = data.filter((camp) => camp.userEmail === user.email);
-        setRegisteredCamps(userCamps);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching registered camps:', error);
-        toast.error('Failed to load registered camps.');
-        setLoading(false);
-      }
-    };
     fetchRegisteredCamps();
   }, [user]);
 
@@ -67,11 +67,9 @@ const RegisteredCamp = () => {
       );
       if (!transactionResponse.ok) throw new Error('Failed to save transaction');
 
-      setRegisteredCamps((prev) =>
-        prev.map((c) =>
-          c._id === camp._id ? { ...c, paymentStatus: 'Paid' } : c
-        )
-      );
+      // Refetch registered camps to update the UI
+      await fetchRegisteredCamps();
+
       toast.success(`Payment successful! Transaction ID: ${transactionId}`);
       setShowPayConfirm(null);
     } catch (error) {
@@ -234,8 +232,7 @@ const RegisteredCamp = () => {
                     )}
                   </td>
                   <td className="py-3 px-4">
-                    {camp.status === 'Paid' &&
-                    camp.confirmationStatus === 'Confirmed' ? (
+                    {camp.status === 'Paid' && camp.confirmationStatus === 'Confirmed' ? (
                       <button
                         onClick={() => setShowFeedbackForm(camp._id)}
                         className="bg-cyan-600 text-white px-3 py-1 rounded-md hover:bg-cyan-700"
@@ -251,11 +248,11 @@ const RegisteredCamp = () => {
                     <button
                       onClick={() => handleCancel(camp)}
                       className={`px-3 py-1 rounded-md ${
-                        camp.paymentStatus === 'Paid'
+                        camp.status === 'Paid'
                           ? 'bg-gray-400 text-white cursor-not-allowed'
                           : 'bg-red-600 text-white hover:bg-red-700'
                       }`}
-                      disabled={camp.paymentStatus === 'Paid' || isSubmitting}
+                      disabled={camp.status === 'Paid' || isSubmitting}
                     >
                       Cancel
                     </button>

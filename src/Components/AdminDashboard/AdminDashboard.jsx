@@ -42,7 +42,7 @@ const AdminDashboard = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Dashboard Header */}
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Admin Dashboard - {organizer.name}
+          Organizer Dashboard
         </h1>
 
         {/* Dashboard Boxes */}
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
           >
             {isIndexRoute ? (
               <div className="p-6 text-center">
-                <h2 className="text-2xl font-bold text-gray-800">Welcome to Admin Dashboard</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Welcome to Organizer Dashboard</h2>
                 <p className="mt-2 text-gray-600">Select an option above to get started.</p>
               </div>
             ) : (
