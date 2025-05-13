@@ -182,9 +182,6 @@ const AvailableCamps = () => {
                   <span className="font-medium">Camp Fees:</span> ${camp?.campFees?.toFixed(2) || '0.00'}
                 </p>
                 <p className="text-gray-600">
-                  <span className="font-medium">Status:</span> Unpaid
-                </p>
-                <p className="text-gray-600">
                   <span className="font-medium">Description:</span> {camp?.description || 'N/A'}
                 </p>
               </div>
