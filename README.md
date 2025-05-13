@@ -1,12 +1,74 @@
-# React + Vite
+# Pulse Portal - Healthcare Camp Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A  application for managing healthcare camps. Users can browse, register, pay for, provide feedback on, and cancel camp registrations with a modern, responsive UI.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Browse and filter available camps with search and sort
+- View detailed camp information and register
+- Pay for camps via Stripe (simulated) with payment tracking
+- Cancel unpaid registrations
+- Submit feedback for paid and confirmed camps
+- Responsive design with Tailwind CSS and Framer Motion animations
+- Real-time notifications using React Toastify
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend**: React, Vite, React Router DOM, React Hook Form, Tailwind CSS, Framer Motion, React Toastify
+- **Backend**: REST API (Node.js/Express, MongoDB )
+- **Auth**: Custom \`AuthProvider\` (Firebase-compatible)
+- **Payment**: Stripe (simulated)
+
+## Setup
+
+1. **Clone the Repository**:
+   \`\`\`bash
+   git clone https://github.com/md-sifat/pulse-portal.git
+   cd pulse-portal
+   \`\`\`
+
+2. **Install Dependencies**:
+   \`\`\`bash
+   npm install
+   \`\`\`
+
+3. **Configure Environment**:
+   Create a \`.env\` file:
+   \`\`\`env
+   VITE_API_URL=https://pulse-portal-server.vercel.app
+   \`\`\`
+
+4. **Run the App**:
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+   Open \`http://localhost:5173\`.
+
+5. **Build for Production**:
+   \`\`\`bash
+   npm run build
+   \`\`\`
+
+## Available Scripts
+
+- \`npm run dev\`: Start dev server with HMR
+- \`npm run build\`: Build for production
+- \`npm run preview\`: Preview production build
+- \`npm run lint\`: Run ESLint
+
+## API Endpoints
+
+- \`GET /camps\`: List all camps
+- \`POST /reg_camps\`: Register for a camp
+- \`GET /reg_camps\`: Get registered camps
+- \`PUT /reg_camp/:camp_id\`: Update payment status
+- \`DELETE /reg_camp/:camp_id\`: Cancel registration
+- \`POST /transactions\`: Store transactions
+- \`POST /feedbacks\`: Submit feedback
+- \`GET /feedbacks\`: Fetch feedback
+
+## Usage
+
+- **Log In**: Go to \`/login\` to authenticate.
+- **Browse Camps**: Visit \`/available-camps\` to view and join camps.
+- **Manage Registrations**: Access \`/registered-camps\` to pay, cancel, or submit feedback.
