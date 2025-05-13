@@ -1,74 +1,55 @@
-# Pulse Portal - Healthcare Camp Management
+# 🌐 Pulse Portal — Healthcare Camp Management System
 
-A  application for managing healthcare camps. Users can browse, register, pay for, provide feedback on, and cancel camp registrations with a modern, responsive UI.
+A modern full-stack web application for managing **healthcare camps**. Users can **browse**, **register**, **pay**, **cancel**, and **submit feedback** for health camps with a sleek UI and smooth user experience.
 
-## Features
+> ✅ **Live Site**: [https://pulse-portal-nine.vercel.app](https://pulse-portal-nine.vercel.app)  
+> 🔗 **Server API**: [https://pulse-portal-server.vercel.app](https://pulse-portal-server.vercel.app)
 
-- Browse and filter available camps with search and sort
-- View detailed camp information and register
-- Pay for camps via Stripe (simulated) with payment tracking
-- Cancel unpaid registrations
-- Submit feedback for paid and confirmed camps
-- Responsive design with Tailwind CSS and Framer Motion animations
-- Real-time notifications using React Toastify
+---
 
-## Tech Stack
+## 🚀 Features
 
-- **Frontend**: React, Vite, React Router DOM, React Hook Form, Tailwind CSS, Framer Motion, React Toastify
-- **Backend**: REST API (Node.js/Express, MongoDB )
-- **Auth**: Custom \`AuthProvider\` (Firebase-compatible)
-- **Payment**: Stripe (simulated)
+- 🔍 **Search & filter** camps with real-time UI
+- 📄 View **detailed camp information**
+- 📝 **Register** for camps with form validation
+- 💳 **Simulated Stripe** payment system
+- ❌ **Cancel unpaid** registrations
+- ⭐ Submit **feedback** for completed camps
+- 📱 **Responsive UI** built with Tailwind CSS
+- ⚡ **Animated experience** using Framer Motion
+- 🔔 **Real-time alerts** with React Toastify
 
-## Setup
+---
 
-1. **Clone the Repository**:
-   \`\`\`bash
-   git clone https://github.com/md-sifat/pulse-portal.git
-   cd pulse-portal
-   \`\`\`
+## 🛠 Tech Stack
 
-2. **Install Dependencies**:
-   \`\`\`bash
-   npm install
-   \`\`\`
+| Tech | Description |
+|------|-------------|
+| ⚛️ **React + Vite** | Fast front-end framework |
+| 🧭 **React Router DOM** | Route management |
+| 🧾 **React Hook Form** | Form handling |
+| 🎨 **Tailwind CSS** | Utility-first styling |
+| 🎞 **Framer Motion** | Modern animations |
+| 🔔 **React Toastify** | Toast notifications |
+| 🔐 **AuthProvider** | Firebase-compatible custom auth |
+| 🌐 **Node.js + Express** | RESTful backend API |
+| 🍃 **MongoDB** | NoSQL database |
+| 💳 **Stripe (Simulated)** | Payment gateway |
 
-3. **Configure Environment**:
-   Create a \`.env\` file:
-   \`\`\`env
-   VITE_API_URL=https://pulse-portal-server.vercel.app
-   \`\`\`
+---
 
-4. **Run the App**:
-   \`\`\`bash
-   npm run dev
-   \`\`\`
-   Open \`http://localhost:5173\`.
+## 🔑 Admin Access (Demo)
 
-5. **Build for Production**:
-   \`\`\`bash
-   npm run build
-   \`\`\`
+Use the following organizer credentials to explore the admin features:
 
-## Available Scripts
+- **Email**: `admin@gmail.com`
+- **Password**: `Admin12345`
 
-- \`npm run dev\`: Start dev server with HMR
-- \`npm run build\`: Build for production
-- \`npm run preview\`: Preview production build
-- \`npm run lint\`: Run ESLint
+---
 
-## API Endpoints
+## 🧪 Setup Instructions
 
-- \`GET /camps\`: List all camps
-- \`POST /reg_camps\`: Register for a camp
-- \`GET /reg_camps\`: Get registered camps
-- \`PUT /reg_camp/:camp_id\`: Update payment status
-- \`DELETE /reg_camp/:camp_id\`: Cancel registration
-- \`POST /transactions\`: Store transactions
-- \`POST /feedbacks\`: Submit feedback
-- \`GET /feedbacks\`: Fetch feedback
-
-## Usage
-
-- **Log In**: Go to \`/login\` to authenticate.
-- **Browse Camps**: Visit \`/available-camps\` to view and join camps.
-- **Manage Registrations**: Access \`/registered-camps\` to pay, cancel, or submit feedback.
+### 1. 📦 Clone the Repository
+```bash
+git clone https://github.com/md-sifat/pulse-portal.git
+cd pulse-portal

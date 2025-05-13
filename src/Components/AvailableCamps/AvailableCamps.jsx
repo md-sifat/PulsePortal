@@ -73,7 +73,8 @@ const AvailableCamps = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch('https://pulse-portal-server.vercel.app/reg_camps', {
+      // Register the user for the camp
+      const registrationResponse = await fetch('https://pulse-portal-server.vercel.app/reg_camps', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -85,17 +86,29 @@ const AvailableCamps = () => {
           location: camp.location,
           healthcareProfessional: camp.healthcareProfessional,
           campFees: camp.campFees,
-          status: 'Unpaid', 
+          status: 'Unpaid',
           registrationDate: new Date().toISOString(),
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to register for camp');
-      const result = await response.json();
-      console.log('Registration Result:', result);
-      toast.success('Successfully registered for the camp!');
-      
-      // Update participant count
+      if (!registrationResponse.ok) throw new Error('Failed to register for camp');
+      const registrationResult = await registrationResponse.json();
+      console.log('Registration Result:', registrationResult);
+
+      // Update participant count in the database
+      const updateResponse = await fetch(`https://pulse-portal-server.vercel.app/update-camp/${camp._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          participantCount: camp.participantCount + 1,
+        }),
+      });
+
+      if (!updateResponse.ok) throw new Error('Failed to update participant count');
+      const updateResult = await updateResponse.json();
+      console.log('Update Participant Count Result:', updateResult);
+
+      // Update local state
       setCamps((prevCamps) =>
         prevCamps.map((c) =>
           c._id === camp._id ? { ...c, participantCount: c.participantCount + 1 } : c
@@ -106,7 +119,9 @@ const AvailableCamps = () => {
           c._id === camp._id ? { ...c, participantCount: c.participantCount + 1 } : c
         )
       );
-      navigate('/available-camps'); // Navigate back to camp list after joining
+
+      toast.success('Successfully registered for the camp!');
+      navigate('/available-camps');
     } catch (error) {
       console.error('Error registering for camp:', error);
       toast.error(`Failed to register: ${error.message}`);
