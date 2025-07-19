@@ -6,21 +6,51 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/firebase.init';
-import { FaHome, FaCampground, FaUserPlus, FaSignOutAlt } from 'react-icons/fa';
+import { FaHome, FaCampground, FaUserPlus, FaSignOutAlt, FaSearch } from 'react-icons/fa';
 
 const Navbar = () => {
   const { user, setUser, dashboard, setDashboard } = useContext(authContext);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
 
   useEffect(() => {
-    // updateData();
     if (user) {
-      console.log(user.email);
-      setDashboard(user.email ==="admin@gmail.com" ? '/admin-dashboard' : '/customer-dashboard');
+      console.log('User email:', user.email);
+      setDashboard(user.email === "admin@gmail.com" ? '/admin-dashboard' : '/customer-dashboard');
     }
   }, [user, setDashboard]);
-  console.log(dashboard);
+
+  useEffect(() => {
+    const fetchCamps = async () => {
+      if (searchQuery.trim() === '') {
+        setSearchResults([]);
+        setIsSearchDropdownOpen(false);
+        return;
+      }
+      try {
+        const response = await fetch('https://pulse-portal-server.vercel.app/camps');
+        const camps = await response.json();
+        console.log('Fetched camps:', camps);
+        const filteredCamps = camps.filter(camp =>
+          camp.campName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          camp.location.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setSearchResults(filteredCamps);
+        setIsSearchDropdownOpen(true);
+      } catch (error) {
+        console.error('Error fetching camps:', error);
+        toast.error('Failed to fetch camps');
+      }
+    };
+    const debounce = setTimeout(fetchCamps, 300);
+    return () => clearTimeout(debounce);
+  }, [searchQuery]);
+
+  console.log('Dashboard:', dashboard);
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -40,6 +70,18 @@ const Navbar = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleCampSelect = (campId) => {
+    console.log('Camp selected with ID:', campId);
+    setSearchQuery('');
+    setSearchResults([]);
+    setIsSearchDropdownOpen(false);
+    navigate(`/available-camps/${campId}`);
+  };
+
   return (
     <div className="w-full px-6 bg-gradient-to-r from-cyan-700 to-cyan-800 min-h-[12vh] rounded-b-2xl shadow-lg">
       <ToastContainer />
@@ -47,11 +89,44 @@ const Navbar = () => {
         {/* Logo and Website Name */}
         <Link to="/" className="flex items-center space-x-2 sm:space-x-6">
           <img src={logo} alt="Logo" className="h-14 w-14 rounded-full" />
-          <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">CampVibe</span>
+          <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">Pulse Portal</span>
         </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
+          <div className="relative">
+            <div className="flex items-center bg-white rounded-full px-3 py-2">
+              <FaSearch className="text-gray-500 mr-2" />
+              <input
+                type="text"
+                placeholder="Search camps..."
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+                className="bg-transparent text-gray-800 focus:outline-none w-40 lg:w-64"
+              />
+            </div>
+            {isSearchDropdownOpen && searchResults.length > 0 && (
+              <div
+                className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-20 max-h-96 overflow-y-auto"
+                role="listbox"
+              >
+                {searchResults.map((camp) => (
+                  <div
+                    key={camp._id}
+                    onClick={() => handleCampSelect(camp._id)}
+                    className="px-4 py-3 border-b last:border-b-0 text-gray-700 hover:bg-cyan-100 cursor-pointer transition-colors duration-200"
+                    role="option"
+                    aria-selected="false"
+                  >
+                    <div className="font-semibold">{camp.campName}</div>
+                    <div className="text-sm">Price: ${camp.campFees}</div>
+                    <div className="text-sm">Participants: {camp.participantCount}</div>
+                    <div className="text-sm">Location: {camp.location}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <Link
             to="/"
             className="flex items-center text-white text-base lg:text-lg hover:text-cyan-200 transition-colors duration-300"
@@ -80,8 +155,9 @@ const Navbar = () => {
                 />
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
-                  }`}
+                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${
+                  isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
+                }`}
               >
                 <div className="px-4 py-3 border-b text-gray-800 font-semibold">
                   {user.displayName || 'User'}
@@ -129,8 +205,9 @@ const Navbar = () => {
                 />
               </button>
               <div
-                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
-                  }`}
+                className={`absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-20 transition-all duration-300 ease-in-out transform origin-top ${
+                  isDropdownOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0 pointer-events-none'
+                }`}
               >
                 <div className="px-4 py-3 border-b text-gray-800 font-semibold">
                   {user.displayName || 'User'}
